@@ -1,0 +1,13 @@
+git init
+npm init --yes
+touch .gitignore
+npm i -D browser-sync
+touch index.html
+mkdir css
+mkdir js
+touch css/app.css
+vscode -> marketplace -> extension -> VS Code for Node.js - Development pack
+npm i -D json-server
+
+Add in package.json "scripts": {
+    "start": "browser-sync --files *.html,css/*.css,js/*.js",
