@@ -1,22 +1,16 @@
-/* Global fetch*/
-const BASE_URL = 'http://localhost:3000/'
+// Global fetch from json-server -w db.json
+const BASE_URL = "http://localhost:3000/"
 
-window.addEventListener('load', function () {
-  loadList()
-  suscribeToFormAddTaskSubmit()
-})
 
-function loadList() {
-  getList()
+// *** Up ***
+// Load list
+function loadList(){
+  getTaskList()
     .then(createList)
     .catch(console.error)
 }
 
-function getList() {
-  return fetch(`${BASE_URL}items`)
-    .then(response => response.json())
-}
-
+// Create list of task
 function createList(listItems) {
   const elementId = 'todo-list'
   const listElement = document.getElementById(elementId)
@@ -26,25 +20,74 @@ function createList(listItems) {
   }
 }
 
+// Create list item for task list
 function createListItem(item) {
   const liElement = document.createElement('li')
   liElement.innerHTML = `
     <p>${item.text}</p>
     <button data-task-id="${item.id}">Eliminar</button>
   `
-  const taskDeleteButton = document.querySelector('button')
-  taskDeleteButton.addEventListener('clic', onDeleteTaskClic)
+  liElement.addEventListener('click', removeTask)
+
   return liElement
 }
 
+// Add task to task list
+function addTaskToList(task) {
+  const listElement = document.getElementById('todo-list')
+  const taskItem = createListItem(task)
+  listElement.append(taskItem)
+  // Visual clear of text box
+  document.getElementById('enter-task-area').value = ''
+}
+
+// Remove task from trask list
+function removeTaskFromList(listItem) {
+  const list = listItem.parentNode
+  list.removeChild(listItem)
+}
+
+// *** Subscribe function to the service
+// Subscribe text area to submit event
+function suscribeToFormAddTaskSubmit() {
+  const form = document.getElementById("add-task")
+  form.addEventListener("submit", onSubmitFormAddTask)
+}
+
+// *** Event listener callbacks ***
+// Submit from add task
+function onSubmitFormAddTask(event) {
+  event.preventDefault()
+  createTask()
+}
+
+// *** Base functionality of the list management
+// Create task
 function createTask() {
-  const text = document.getElementById('add-task-area').value
-  const task = { text }
+  const text = document.getElementById("enter-task-area").value
+  const task = { "text": text }
   saveTask(task)
     .then(addTaskToList)
     .catch(console.error)
 }
 
+// Remove task
+function removeTask(event) {
+  const button = event.target
+  const { taskId } = button.dataset
+  deleteTask(taskId)
+    .then(() => button.parentNode)
+    .then(removeTaskFromList)
+}
+
+// *** Database management functions ***
+// Get task list from database
+function getTaskList() {
+  return fetch(`${BASE_URL}items`)
+    .then(response => response.json())
+}
+
+// Save task in database
 function saveTask(task) {
   return fetch(`${BASE_URL}items`, {
     method: 'POST',
@@ -56,30 +99,7 @@ function saveTask(task) {
     .then(response => response.json())
 }
 
-function onSubmitFormAddTask(event) {
-  event.preventDefault()
-  createTask()
-}
-
-function suscribeToFormAddTaskSubmit() {
-  const form = document.getElementById('add-task')
-  form.addEventListener('submit', onSubmitFormAddTask)
-}
-
-function addTaskToList(task) {
-  const listElement = document.getElementById('todo-list')
-  const taskItem = createListItem(task)
-  listElement.append(taskItem)
-  document.getElementById('add-task-area').value = ''
-}
-
-function onDeleteTaskClic(event) {
-  const button = event.target
-  const { taskId } = button.dataset
-  deleteTask(taskId)
-    .then(() => button.parentNode)
-    .then(removeItemOfList)
-}
+// Delete task in database
 function deleteTask(taskId) {
   return fetch(`${BASE_URL}items/${taskId}`, {
     method: 'DELETE'
@@ -87,7 +107,11 @@ function deleteTask(taskId) {
     .then(response => response.json())
 }
 
-function removeItemOfList(listItem) {
-  const list = listItem.parentNode
-  list.removeChild(listItem)
-}
+// *** Main ***
+// Beginning of execution point - Load service call when refresh page only
+window.addEventListener('load', function(){
+  // Receive information from the User and store to DB
+  suscribeToFormAddTaskSubmit()
+  // Display the information from DB to User
+  loadList()
+})
