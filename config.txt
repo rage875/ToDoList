@@ -11,4 +11,8 @@ vscode -> marketplace -> extension -> VS Code for Node.js - Development pack
 npm i -D json-server
 
 Add in package.json "scripts": {
-    "start": "browser-sync --files *.html,css/*.css,js/*.js",
+    "start:app": "browser-sync --files *.html,css/*.css,js/*.js",
+    "start:db": "json-server -w db.json",
+
+npm run start:db queda corriendo inicia base de datos
+npm run start:app queda corriendo inicia pagina en browser
