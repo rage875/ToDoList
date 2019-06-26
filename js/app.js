@@ -1,6 +1,34 @@
 // Global fetch from json-server -w db.json
 const BASE_URL = "http://localhost:3000/"
 
+// *** Frameworks functions ***
+// Task item to default format
+function itemToDefault(item) {
+  console.log("data-framework undefined")
+  const liElement = document.createElement("li")
+  liElement.innerHTML = `
+    <p>${item.text}</p>
+    <button data-task-id="${item.id}">Eliminar</button>
+  `
+  return liElement;
+}
+
+// Task item to bootstrap format
+function itemToBootstrap(item) {
+  console.log("data-framework bootstrap")
+  const liElement = document.createElement("li")
+  liElement.className = "list-group-item"
+  liElement.innerHTML = `
+    <p>${item.text}</p>
+    <button data-task-id="${item.id}">Eliminar</button>
+  `
+  return liElement;
+}
+
+const itemCreator = {
+  "null" : itemToDefault,
+  "bootstrap" : itemToBootstrap
+}
 
 // *** Up ***
 // Load list
@@ -22,11 +50,11 @@ function createList(listItems) {
 
 // Create list item for task list
 function createListItem(item) {
-  const liElement = document.createElement('li')
-  liElement.innerHTML = `
-    <p>${item.text}</p>
-    <button data-task-id="${item.id}">Eliminar</button>
-  `
+  const framework = document.querySelector("ul").getAttribute("data-framework")
+  console.log(framework)
+  
+  const liElement = itemCreator[framework](item)
+
   liElement.addEventListener('click', removeTask)
 
   return liElement
