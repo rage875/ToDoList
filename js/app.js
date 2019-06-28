@@ -25,9 +25,48 @@ function itemToBootstrap(item) {
   return liElement;
 }
 
+// Task item to materialize format
+function itemToMaterialize(item) {
+  console.log("data-framework materialize")
+  const liElement = document.createElement("li")
+  liElement.className = "collection-item"
+  liElement.innerHTML = `
+    <p>${item.text}</p>
+    <button data-task-id="${item.id}">Eliminar</button>
+  `
+  return liElement;
+}
+
+// Task item to foundations format
+function itemToFoundations(item) {
+  console.log("data-framework foundations")
+  const liElement = document.createElement("li")
+  liElement.className = "list-item"
+  liElement.innerHTML = `
+    <p>${item.text}</p>
+    <button data-task-id="${item.id}">Eliminar</button>
+  `
+  return liElement;
+}
+
+// Task item to bulma format
+function itemToBulma(item) {
+  console.log("data-framework bulma")
+  const liElement = document.createElement("li")
+  liElement.className = "list-item"
+  liElement.innerHTML = `
+    <p>${item.text}</p>
+    <button data-task-id="${item.id}">Eliminar</button>
+  `
+  return liElement;
+}
+
 const itemCreator = {
   "null" : itemToDefault,
-  "bootstrap" : itemToBootstrap
+  "bootstrap" : itemToBootstrap,
+  "materialize" : itemToMaterialize,
+  "foundations" : itemToFoundations,
+  "bulma" : itemToBulma,
 }
 
 // *** Up ***
